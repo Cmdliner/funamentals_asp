@@ -27,6 +27,9 @@ app.Use(async (context, next) =>
 
 });
 
+// Conditional middleware
+app.UseWhen((context) => context.Request.Query.ContainsKey("name"), app => app.UseRequestQuery());
+
 // Use a custom middleware defined as per normal asp devs convention
 app.UseConventional();
 
