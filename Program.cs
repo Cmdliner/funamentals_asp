@@ -1,14 +1,33 @@
-using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Extensions.Primitives;
+using AspNetFundamentals.Middlewares;
 
-var app = WebApplication.CreateBuilder().Build();
+var builder = WebApplication.CreateBuilder();
 
-app.Use(async (context, next) => {
-    var log = context.Request.Path.ToString();
-    Console.WriteLine(log);
-    await next.Invoke();
+// Dependency Injection
+builder.Services.AddTransient<Demo>();
+
+var app = builder.Build();
+
+// Middlewares
+app.Use(async (context, next) => 
+{
+    await context.Response.WriteAsync("Middleware 1");
+    await next();
 });
-app.Run(async context => {
-    await context.Response.WriteAsync("Hello World!");
+
+// Using the custom middleware
+app.UseMiddleware<Demo>();
+
+// Uses custom middleware directly
+app.Demonstrate();
+
+app.Use(async (context, next) => 
+{
+    await context.Response.WriteAsync("Middleware 3");
+    await next();
+
 });
+
+// Use a custom middleware defined as per normal asp devs convention
+app.UseConventional();
+
 app.Run();
