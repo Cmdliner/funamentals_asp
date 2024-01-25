@@ -2,14 +2,10 @@ namespace AspNetFundamentals.Middlewares;
 
 using System.Globalization;
 
-public class RequestCultureMiddleware
+public class RequestCultureMiddleware(RequestDelegate next)
 {
-    private readonly RequestDelegate _next;
+    private readonly RequestDelegate _next = next;
 
-    public RequestCultureMiddleware(RequestDelegate next)
-    {
-        _next = next;
-    }
 
     public async Task InvokeAsync(HttpContext context)
     {
@@ -29,8 +25,7 @@ public class RequestCultureMiddleware
 
 public static class RequestCultureMiddlewareExtensions
 {
-    public static IApplicationBuilder UseRequestCulture(
-        this IApplicationBuilder builder)
+    public static IApplicationBuilder UseRequestCulture(this IApplicationBuilder builder)
     {
         return builder.UseMiddleware<RequestCultureMiddleware>();
     }
